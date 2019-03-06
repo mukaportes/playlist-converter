@@ -1,0 +1,51 @@
+{
+  "name": "playlist-converter",
+  "version": "1.0.0",
+  "description": "Playlist converter between YouTube and Spotify",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint --fix src/",
+    "start": "nodemon src/index.js --exec babel-node",
+    "test": "jest --config jest-config.json --forceExit",
+    "transpile": "babel src --quiet --out-dir build --ignore '**/*.spec.js'",
+    "build": "babel src --out-dir /dist"
+  },
+  "engines": {
+    "node": "8.11.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mukaportes/playlist-converter.git"
+  },
+  "author": "Murilo Portescheller @mukaportes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mukaportes/playlist-converter/issues"
+  },
+  "homepage": "https://github.com/mukaportes/playlist-converter#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.0",
+    "babel-preset-node8": "^1.2.0",
+    "dotenv": "^6.2.0",
+    "eslint": "^5.15.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "jest": "^22.4.4",
+    "jest-junit": "^3.4.1",
+    "nodemon": "^1.18.3"
+  },
+  "dependencies": {
+    "babel-register": "^6.26.0",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "faker": "^4.1.0",
+    "joi": "^13.5.2",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "request": "^2.87.0",
+    "winston": "^3.2.1"
+  }
+}
