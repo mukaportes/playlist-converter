@@ -1,5 +1,5 @@
 import app from './app';
-import logger from './helpers/logger';
+import logger from './base/logger';
 
 app.start().then(() => {
   app.listen(app.port);
