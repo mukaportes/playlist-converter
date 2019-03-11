@@ -1,8 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-// NOTE: create method to verify if token stored in memory has expired
-
 export default class AuthProvider {
   /**
    * @param {string} clientId: Client ID to generate a new access token
