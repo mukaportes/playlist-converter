@@ -6,12 +6,13 @@ export default class YouTube {
    * @param {string} apiKey: YouTube API Key
    * @param {string} url: YouTube API URL
    */
-  constructor({ apiKey, url }) {
+  constructor(apiKey, url) {
     this.apiKey = apiKey;
     this.url = url;
   }
 
   /**
+   * @private
    * @param {string} playlistId: ID of the target YouTube playlist
    * @returns {object}           Object containing all required request params for GetPlaylistItems
    */
@@ -27,6 +28,7 @@ export default class YouTube {
   }
 
   /**
+   * @public
    * @param {string} playlistId: ID of the target YouTube playlist
    * @returns {array}            Array containing items from the playlist
    */
