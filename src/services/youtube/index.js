@@ -6,7 +6,7 @@ export default class YouTube {
    * @param {string} apiKey: YouTube API Key
    * @param {string} url: YouTube API URL
    */
-  constructor(apiKey, url) {
+  constructor({ apiKey, url }) {
     this.apiKey = apiKey;
     this.url = url;
   }
@@ -34,6 +34,7 @@ export default class YouTube {
    */
   async getPlaylistItems(playlistId) {
     const { params, url } = this.buildPlaylistItemsParams(playlistId);
+    logger.debug('GetPlaylistItems request options', params);
 
     try {
       const requestResult = await axios.get(url, { params });
