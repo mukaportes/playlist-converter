@@ -3,13 +3,14 @@ import schema from './validations';
 import events from '../../../base/enum/events';
 import messages from '../../../messages';
 
-const { badRequest, success, unprocessableEntity } = events;
+const { badRequest, success } = events;
 
 export default class YoutubeSpotifyConvert extends BaseResolver {
-  constructor(youtubeService, spotifyService) {
+  constructor({ youtubePresenter, youtubeService, spotifyService }) {
     super(schema);
     // NOTE: temp value, needs to create endpoints enum
     this.location = '[GET] /youtube';
+    this.youtubePresenter = youtubePresenter;
     this.youtubeService = youtubeService;
     this.spotifyService = spotifyService;
   }
@@ -19,6 +20,23 @@ export default class YoutubeSpotifyConvert extends BaseResolver {
     const trimStart = playlistUrl.indexOf('&list=') + 6;
 
     return playlistUrl.substr(trimStart, (playlistUrl.length - trimStart));
+  }
+
+  createPromisesList(playlist) {
+    const formatPlaylist = this.youtubePresenter.formatPlaylistItems(playlist);
+
+    return formatPlaylist.map(searchItem => new Promise(async (resolve) => {
+      try {
+        console.log('\nsearchItem.title', searchItem.title);
+        const getSearchResult = await this.spotifyService.getSearchResult(searchItem.title);
+
+        resolve(getSearchResult);
+      } catch (error) {
+        // logger.debug(`Track "${searchItem.title}" not found: `, error);
+
+        resolve({});
+      }
+    }));
   }
 
   async run(request) {
@@ -31,12 +49,15 @@ export default class YoutubeSpotifyConvert extends BaseResolver {
     const playlistId = this.getPlaylistIdFromUrl(request.playlistUrl);
     const playlist = await this.youtubeService.getPlaylistItems(playlistId);
 
-    if (playlist.errors > 0) {
-      this.emit(unprocessableEntity, { error: playlist.errors });
+    // if (playlist.errors > 0) {
+    //   this.emit(unprocessableEntity, { error: playlist.errors });
 
-      return;
-    }
+    //   return;
+    // }
 
-    this.emit(success, { playlist });
+    const promisesList = this.createPromisesList(playlist);
+    const getSearchResult = await Promise.all(promisesList);
+
+    this.emit(success, { getSearchResult });
   }
 }
