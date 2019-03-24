@@ -43,4 +43,31 @@ export default class SpotifyService extends AuthProvider {
 
     return axios.get(url, options);
   }
+
+  buildSearchParams(accessToken, searchQuery) {
+    return {
+      options: {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          q: searchQuery,
+          type: 'track',
+          limit: 3,
+        },
+      },
+      url: `${this.url}/search`,
+    };
+  }
+
+  async getSearchResult(searchQuery) {
+    this.searchQuery = searchQuery;
+
+    const accessToken = await this.getAccessToken();
+    const { options, url } = this.buildSearchParams(accessToken, searchQuery);
+
+    const request = await axios.get(url, options);
+
+    return request.data;
+  }
 }

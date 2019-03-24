@@ -40,7 +40,7 @@ export default class AuthProvider {
     const { body, options, url } = this.buildParams();
     const generateToken = await axios.post(url, body, options);
 
-    const { accessToken, expiresIn } = this.formatAccessTokenResponse(generateToken);
+    const { accessToken, expiresIn } = this.formatAccessTokenResponse(generateToken.data);
 
     const now = new Date().getTime();
     const nowInMiliseconds = now * 1000;
@@ -53,7 +53,7 @@ export default class AuthProvider {
    * @public
    */
   async getAccessToken() {
-    if (!this.accessToken || !this.isTokenExpired()) return this.authenticate();
+    if (!this.accessToken || this.isTokenExpired()) await this.authenticate();
 
     return this.accessToken;
   }
@@ -62,14 +62,16 @@ export default class AuthProvider {
    * @private
    * @param response: Http response from the API to be formatted
    */
-  formatAccessTokenResponse(response) {
+  formatAccessTokenResponse(responseData) {
     const camelCaseResponse = {};
 
-    Object.keys(response.data).forEach((item) => {
+    Object.keys(responseData).forEach((item) => {
       const camelCaseKey = _.camelCase(item);
 
-      camelCaseResponse[camelCaseKey] = response.data[item];
+      camelCaseResponse[camelCaseKey] = responseData[item];
     });
+
+    console.log('camelCaseResponse', camelCaseResponse);
 
     return camelCaseResponse;
   }
