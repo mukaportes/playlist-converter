@@ -1,7 +1,7 @@
+import YoutubeRoutes from './youtube';
+
 const buildRoutes = async app => new Promise((resolve) => {
-  app.use('/api/v1/', (req, res) => {
-    res.status(200).send(req);
-  });
+  app.use('/api/v1/youtube', YoutubeRoutes());
 
   resolve();
 });
