@@ -17,7 +17,7 @@ export default class YoutubeSpotifyConvert extends BaseResolver {
 
   // NOTE: temp solution before Regex-based trimming implementation
   getPlaylistIdFromUrl(playlistUrl) {
-    const trimStart = playlistUrl.indexOf('&list=') + 6;
+    const trimStart = playlistUrl.indexOf('list=') + 5;
 
     return playlistUrl.substr(trimStart, (playlistUrl.length - trimStart));
   }
@@ -27,7 +27,6 @@ export default class YoutubeSpotifyConvert extends BaseResolver {
 
     return formatPlaylist.map(searchItem => new Promise(async (resolve) => {
       try {
-        console.log('\nsearchItem.title', searchItem.title);
         const getSearchResult = await this.spotifyService.getSearchResult(searchItem.title);
 
         resolve(getSearchResult);
@@ -57,6 +56,8 @@ export default class YoutubeSpotifyConvert extends BaseResolver {
 
     const promisesList = this.createPromisesList(playlist);
     const getSearchResult = await Promise.all(promisesList);
+
+    const formatResult = this.spotifyPresenter.formatPlaylistItems(getSearchResult);
 
     this.emit(success, { getSearchResult });
   }
